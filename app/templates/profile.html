@@ -10,10 +10,45 @@
         <link rel="stylesheet" href="../static/css/cunty.css">
     </head>
     <body>
-      <nav class="navbar fixed-bottom bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">EMOWWIb</a>
+      <nav class="navbar fixed-bottom">
+        <div class="container-fluid justify-content-md-center">
+          <a class="navbar-brand p-2" href="#">
+            <img src="../static/match.png" alt="MATCHES" width="30" height="30">
+          </a>
+          <a class="navbar-brand p-2" href="#">
+            <img src="../static/arrow.png" alt="ARROW" width="30" height="30">
+          </a>
+          <a class="navbar-brand p-2" href="#">
+            <img src="../static/profile.png" alt="PROFILE" width="30" height="30">
+          </a>
         </div>
       </nav>
+
+      <div class="rounded 75vh justify-content-center align-content-center">
+        <div class="mb-3 row">
+          <label for="username" class="col-sm-2 col-form-label">Username</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="username" value="{{username}}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="name" class="col-sm-2 col-form-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="name" value="{{name}}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="contact" value="{{contact}}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="username" class="col-sm-2 col-form-label">Username</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="username" value="{{username}}">
+          </div>
+        </div>
+      </div>
     </body>
 </html>
