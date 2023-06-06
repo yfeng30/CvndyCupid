@@ -9,9 +9,9 @@ c = db.cursor()
 db.executescript("""
 CREATE TABLE if not exists profile(user text, pw text, full_name text, contact text, college text, major text, bio text);
 Insert into profile values(?,?,?,?,?,?,?), ('admin', 'password', 'Frist Lsat', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
+CREATE TABLE if not exists matches(user text, matches text, not_matches text, potentials text, unswiped text);
+Insert into matches values(?,?,?,?,?), ('admin', '', '', '', '');
 """)
-# CREATE TABLE if not exists playlist(username text, song text, artist text, lyrics text);
-# """)
 
 def db_connect():
     global db
@@ -26,7 +26,34 @@ def db_connect():
 def create_user(user, pw, full_name, contact, college, major, bio):
     try:
         c=db_connect()
+
+        print("profile table before adding user")
+        rows = c.execute("select * from profile")
+        for row in rows:
+            print(row)
+        print("\nmatches table before adding user")
+        rows = c.execute("select * from matches")
+        for row in rows:
+            print(row)
+    
+        # add user to unmatched of everyone already in matches table
+        unmatched_strings = c.execute("select unmatched from matches")
+        for each in unmatched_string:
+            each = each + user + ","
+            c.execute("update unmatched to {each} where row = 1")
+            row += 1
+
         c.execute("Insert into profile values(?,?,?,?,?,?,?)", (user, pw, full_name, contact, college, major, bio))
+        
+        print("\nprofile table after adding user")
+        rows = c.execute("select * from profile")
+        for row in rows:
+            print(row)
+        print("\nmatches table before adding user")
+        rows = c.execute("select * from matches")
+        for row in rows:
+            print(row)
+
         c.close()
         db.commit()
         db.close()
@@ -67,7 +94,7 @@ def check_pass(user, pw):
         return False
 
 # print("create_user test")
-# create_user('rory','gilmore', 'Rory Gilmore', '8675309', 'Yale', 'English', 'insert bio here')
+create_user('rory','gilmore', 'Rory Gilmore', '8675309', 'Yale', 'English', 'insert bio here')
 # print("check_user test - should be True")
 # print(check_user('admin'))
 # print(check_user('rory'))
@@ -80,6 +107,30 @@ def check_pass(user, pw):
 # print(check_pass('admin','psword'))
 # print(check_pass('u','p')) # false b/c not an account
 
+# SWIPE METHODS ---------------------------------------------------------------------------
+'''
+swipe_right(a, b)
+a = user that is logged in
+b = who they are swiping yes on
+Remove b from a’s unswiped
+If a is in b’s matches: (shouldn’t happen b/c you can’t swipe on someone you alr matched with but I’ll code it anyway)
+Add b to a’s matches
+If a is in b’s not_matches: (shouldn’t happen b/c you can’t swipe on someone who said no to you but I’ll code it anyway)
+Add b to a’s not matches
+If a is in b’s potentials:
+Add b to a’s matches
+Remove a from b’s potentials
+Add a to b’s matches
+If a is in b’s unswiped:
+Add b to a’s potentials
+Add some error handling for a not being in any of b’s lists
+Add error handling for any other potential issues
+'''
+# updates matches table
+# a is the person logged in, and they are swiping on b
+# returns nothing
+def swipe_right(a, b):
+    return null
 # Copy and paste format (and uncomment) to create users for db
 # These commands are executed when db_handle is imported to __init__.py ??
 # user = ""
