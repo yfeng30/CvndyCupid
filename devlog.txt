@@ -1,2 +1,8 @@
 emilyO -- 2023-06-04 00:30
 - coded and tested login methods in db_handle.py
+
+==========================
+
+yuki -- 2023-06-05 13:45
+- made basic html files
+- made __init__.py
