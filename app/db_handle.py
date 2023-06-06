@@ -9,8 +9,8 @@ c = db.cursor()
 db.executescript("""
 CREATE TABLE if not exists profile(user text, pw text, full_name text, contact text, college text, major text, bio text);
 Insert into profile values(?,?,?,?,?,?,?), ('admin', 'password', 'Frist Lsat', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
-CREATE TABLE if not exists matches(user text, matches text, not_matches text, potentials text, unswiped text);
-Insert into matches values(?,?,?,?,?), ('admin', '', '', '', '');
+CREATE TABLE if not exists matches(p0 text, p1 text, status text);
+Insert into matches values(?,?,?), ('admin', '', '');
 """)
 
 def db_connect():
@@ -27,32 +27,29 @@ def create_user(user, pw, full_name, contact, college, major, bio):
     try:
         c=db_connect()
 
-        print("profile table before adding user")
-        rows = c.execute("select * from profile")
-        for row in rows:
-            print(row)
-        print("\nmatches table before adding user")
-        rows = c.execute("select * from matches")
-        for row in rows:
-            print(row)
+        # print("profile table before adding user")
+        # rows = c.execute("select * from profile")
+        # for row in rows:
+        #     print(row)
+        # print("\nmatches table before adding user")
+        # rows = c.execute("select * from matches")
+        # for row in rows:
+        #     print(row)
     
-        # add user to unmatched of everyone already in matches table
-        unmatched_strings = c.execute("select unmatched from matches")
-        for each in unmatched_string:
-            each = each + user + ","
-            c.execute("update unmatched to {each} where row = 1")
-            row += 1
+        # add user as p0, and create a row with p0 as everyone else in table
+        c.execute("select p0 from matches")
+        print(c.fetchone()[1][0])
 
         c.execute("Insert into profile values(?,?,?,?,?,?,?)", (user, pw, full_name, contact, college, major, bio))
         
-        print("\nprofile table after adding user")
-        rows = c.execute("select * from profile")
-        for row in rows:
-            print(row)
-        print("\nmatches table before adding user")
-        rows = c.execute("select * from matches")
-        for row in rows:
-            print(row)
+        # print("\nprofile table after adding user")
+        # rows = c.execute("select * from profile")
+        # for row in rows:
+        #     print(row)
+        # print("\nmatches table before adding user")
+        # rows = c.execute("select * from matches")
+        # for row in rows:
+        #     print(row)
 
         c.close()
         db.commit()
