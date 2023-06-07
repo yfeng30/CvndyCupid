@@ -11,3 +11,9 @@ yuki -- 2023-06-05 13:45
 
 emilyO -- 2023-06-06 13:30
 - pushed changes from yesterday (trying to edit table values)
+
+yuki -- 2023-06-06 13:40
+- added nav bar to profile and matches
+
+yuki -- 2023-06-06 22:11
+- added input groups for register and profile

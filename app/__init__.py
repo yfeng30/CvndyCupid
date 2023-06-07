@@ -20,7 +20,7 @@ app.secret_key = os.urandom(32)
 def login():
     if 'username' in session: #when cookie work
     #if(False):
-        return redirect('/home/pl')
+        return redirect('/swipe')
     return render_template('login.html') #names subject to change
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -63,6 +63,17 @@ def logout():
   #"popped user: " + session.pop('username'))
   return redirect('/')
 
+@app.route('/swipe', methods = ['GET', 'POST'])
+def swipe():
+  return render_template("swipe.html")
+
+@app.route('/profile', methods = ['GET', 'POST'])
+def profile():
+  return render_template("profile.html")
+
+@app.route('/matches', methods = ['GET', 'POST'])
+def matches():
+  return render_template("matches.html")
 
 if __name__ == '__main__':
     app.debug = True

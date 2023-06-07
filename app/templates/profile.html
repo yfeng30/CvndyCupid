@@ -12,7 +12,7 @@
     <body>
       <nav class="navbar fixed-bottom">
         <div class="container-fluid justify-content-md-center">
-          <a class="navbar-brand p-2" href="#">
+          <a class="navbar-brand p-2" href="/matches">
             <img src="../static/match.png" alt="MATCHES" width="30" height="30">
           </a>
           <a class="navbar-brand p-2" href="#">
@@ -23,32 +23,53 @@
           </a>
         </div>
       </nav>
-
-      <div class="rounded 75vh justify-content-center align-content-center">
-        <div class="mb-3 row">
-          <label for="username" class="col-sm-2 col-form-label">Username</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="username" value="{{username}}">
-          </div>
+      <div class="position-absolute top-50 start-50 translate-middle bg-body-tertiary rounded p-4">
+        <div class="mb-3 row justify-content-center">
+          <img src="{{pfp}}" class="w-25 h-25" alt="Profile Picture" >
         </div>
         <div class="mb-3 row">
-          <label for="name" class="col-sm-2 col-form-label">Name</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="name" value="{{name}}">
+            <label for="username" class="col-sm-4 col-form-label">Username</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="username" value="{{username}}">
+            </div>
           </div>
-        </div>
-        <div class="mb-3 row">
-          <label for="contact" class="col-sm-2 col-form-label">Contact</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="contact" value="{{contact}}">
+          <div class="mb-3 row">
+            <label for="full_name" class="col-sm-4 col-form-label">Name</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="name" value="{{full_name}}">
+            </div>
           </div>
-        </div>
-        <div class="mb-3 row">
-          <label for="username" class="col-sm-2 col-form-label">Username</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="username" value="{{username}}">
+          <div class="mb-3 row">
+            <label for="contact" class="col-sm-4 col-form-label">Contact</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="contact" value="{{contact}}">
+            </div>
           </div>
-        </div>
+          <div class="mb-3 row">
+            <label for="college" class="col-sm-4 col-form-label">College</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="college" value="{{college}}">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="major" class="col-sm-4 col-form-label">Major</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="college" value="{{major}}">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="bio" class="col-sm-4 col-form-label">Bio</label>
+            <div class="col-sm-8">
+              <input type="text" readonly class="form-control-plaintext" id="bio" value="{{bio}}">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <center>
+              <form action="/logout" method="GET">
+                <button type="button" class="btn" value="logout">Logout</button>
+              </form>
+            </center>
+          </div>
       </div>
     </body>
 </html>

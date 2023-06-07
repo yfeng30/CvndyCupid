@@ -18,13 +18,19 @@
                     <div class="row">
                       <div class="col col-lg-8 mx-auto">
 
-                        <h1 class="text-center m-3 text-white display-1"> Crocodile Covers </h1>
+                        <h1 id="pink" class="text-center m-3 display-1"> Cvndy Cupid </h1>
                         <!-- <a href="/">
                           <img src = "../static/lyle.png" class="rounded mx-auto d-block" style = "height: 100px; width:100px">
                         </a> -->
-                        <h2 class="login-heading m-3 text-warning text-center">Sign Up</h2>
+                        <h2 id="pink" class="login-heading m-3 text-center">Sign Up</h2>
                         <form class="px-4 py-3" action ="/signup" method="POST">
                           
+                          <div class="form-floating m-3">
+                            <input required type="url" class="form-control" name="pfp" id="form_pfp" placeholder="Profile Picture">  
+                            <label for="form_pfp">Profile Picture</label>
+                            <div class="form-text">Use google drive share link and make sure anyone with link can view</div>
+                          </div>
+
                           <div class="form-floating m-3">
                             <input required type="text" class="form-control" name="username" id="form_user" placeholder="Username">
                             <label for="form_user">Username</label>
@@ -39,18 +45,39 @@
                             <input required type="password" class="form-control" name="password_confirm" id="form_password" placeholder="Password">  
                             <label for="form_password">Confirm Password</label>
                           </div>
-          
+
+                          <div class="form-floating m-3">
+                            <input required type="date" class="form-control" name="dob" id="form_dob" placeholder="Date of birth">  
+                            <label for="form_dob">Date of birth</label>
+                          </div>
+
+                          <div class="form-floating m-3">
+                            <input required type="text" class="form-control" name="college" id="form_college" placeholder="College">  
+                            <label for="form_college">College</label>
+                          </div>
+
+                          <div class="form-floating m-3">
+                            <input required type="text" class="form-control" name="major" id="form_major" placeholder="Major">  
+                            <label for="form_major">Major</label>
+                          </div>
+
+                          <div class="form-floating m-3">
+                            <input required type="text" class="form-control" name="bio" id="form_bio" placeholder="Bio">  
+                            <label for="form_bio">Bio</label>
+                            <div class="form-text">Max: 250 characters</div>
+                          </div>
+
                           <div class="text-warning text-center">
-                            <br> <button type="submit" class="user_button btn btn-lg btn-outline-warning" name="sub1" value="Sign In">Sign up</button>
+                            <br> <button type="submit" class="user_button btn btn-lg btn-outline-info" name="sub1" value="Sign In">Sign up</button>
                           </div>
                           
                         </form>
                         
                         <div class="container-fluid text-center">
                           <p class="text-danger">{{status}}</p>
-                          <p class="text-white"> Already have an account? </p> 
+                          <p class="text-secondary"> Already have an account? </p> 
                           <form action="/auth" method="GET">
-                            <button class="user_button btn btn-lg btn-outline-warning" value="login" name="sub1">Login</button>
+                            <button class="user_button btn btn-lg btn-outline-info" value="login" name="sub1">Login</button>
                           </form>  
                       </div>  <!-- close register container -->
                       </div>
