@@ -7,8 +7,8 @@ db = sqlite3.connect(DB_FILE, check_same_thread = False)
 c = db.cursor()
 
 db.executescript("""
-CREATE TABLE if not exists profile(user text, pw text, full_name text, contact text, college text, major text, bio text);
-Insert into profile values(?,?,?,?,?,?,?), ('admin', 'password', 'Frist Lsat', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
+CREATE TABLE if not exists profile(user text, pw text, full_name text, dob text, contact text, college text, major text, bio text);
+Insert into profile values(?,?,?,?,?,?,?,?), ('admin', 'password', 'Frist Lsat', '1/2/2005', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
 CREATE TABLE if not exists matches(p0 text, p1 text, status text);
 Insert into matches values(?,?,?), ('admin', '', '');
 """)
@@ -23,7 +23,7 @@ def db_connect():
 # Creates a new user
 # Parameters: text user, pw, full_name, contact, college, major, bio
 # Returns nothing
-def create_user(user, pw, full_name, contact, college, major, bio):
+def create_user(user, pw, full_name, dob, contact, college, major, bio):
     try:
         c=db_connect()
 
@@ -40,8 +40,7 @@ def create_user(user, pw, full_name, contact, college, major, bio):
         c.execute("select p0 from matches")
         print(c.fetchone()[1][0])
 
-        c.execute("Insert into profile values(?,?,?,?,?,?,?)", (user, pw, full_name, contact, college, major, bio))
-        
+        c.execute("Insert into profile values(?,?,?,?,?,?,?,?)", (user, pw, full_name, dob, contact, college, major, bio))
         # print("\nprofile table after adding user")
         # rows = c.execute("select * from profile")
         # for row in rows:
@@ -91,7 +90,7 @@ def check_pass(user, pw):
         return False
 
 # print("create_user test")
-create_user('rory','gilmore', 'Rory Gilmore', '8675309', 'Yale', 'English', 'insert bio here')
+create_user('rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
 # print("check_user test - should be True")
 # print(check_user('admin'))
 # print(check_user('rory'))

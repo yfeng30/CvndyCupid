@@ -39,10 +39,10 @@ def make_account():
   if (request.form.get('password') != request.form.get('password_confirm')):
     return render_template('register.html', status='The passwords typed are not the same!')
   print("register " + request.form.get('username') + " " + request.form.get('password'))
-  create_user(request.form.get('username'), request.form.get('password')) #NEED method to create an entry in the table
+  create_user(request.form.get('username'), request.form.get('password'), request.form.get('full_name'), request.form.get('dob'), request.form.get('contact'), request.form.get('college'), request.form.get('major'), request.form.get('bio')) #NEED method to create an entry in the table
   session['username'] = request.form['username']
   print(session['username'])
-  return redirect('/home/pl') #/home or /
+  return redirect('/swipe') #/home or /
   
 #this method actually verifies whether or not the login works
 @app.route('/auth', methods=['GET', 'POST'])
