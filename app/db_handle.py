@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_FILE = "database.db"
+DB_FILE = "data.db"
 
 db = None
 db = sqlite3.connect(DB_FILE, check_same_thread = False)
@@ -26,7 +26,6 @@ def db_connect():
 def create_user(user, pw, full_name, dob, contact, college, major, bio):
     try:
         c=db_connect()
-
         # print("profile table before adding user")
         # rows = c.execute("select * from profile")
         # for row in rows:

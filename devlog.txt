@@ -17,3 +17,8 @@ yuki -- 2023-06-06 13:40
 
 yuki -- 2023-06-06 22:11
 - added input groups for register and profile
+- added dob to database.db...got some issues tho
+
+==========================
+
+ -- 2023-06-07
