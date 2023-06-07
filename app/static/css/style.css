@@ -1,0 +1,80 @@
+body {
+    background: linear-gradient(0deg, #ffbfff, #ff80e1) no-repeat center center fixed;
+    overflow: hidden;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Set minimum height of the viewport */
+  }
+  
+  .card-img-top {
+    width: 50%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    font-size: 3.5rem;
+    border-radius: 20px;
+    width: auto;
+  }
+  
+  .swipe-card {
+    width: 100%;
+    max-width: 1000px;
+    height: 80vh;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto; /* Center the card horizontally */
+  }
+  
+  .swipe-card .card-img-top {
+    width: 100%;
+    height: 50%;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .swipe-card .card-body {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .swipe-card .card-title {
+    font-size: 5.0rem;
+  }
+  
+  .swipe-card .card-text {
+    font-size: 3.5rem;
+  }
+  
+  .swipe-card .swipe-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .swipe-card .swipe-buttons .btn {
+    flex-grow: 1;
+    margin: 0 10px;
+  }
+  
+  
+  
