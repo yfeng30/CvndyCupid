@@ -24,37 +24,55 @@ def db_connect():
 # Parameters: text user, pw, full_name, contact, college, major, bio
 # Returns nothing
 def create_user(user, pw, full_name, dob, contact, college, major, bio):
-    try:
-        c=db_connect()
-        # print("profile table before adding user")
-        # rows = c.execute("select * from profile")
-        # for row in rows:
-        #     print(row)
-        # print("\nmatches table before adding user")
-        # rows = c.execute("select * from matches")
-        # for row in rows:
-        #     print(row)
-    
-        # add user as p0, and create a row with p0 as everyone else in table
-        c.execute("select p0 from matches")
-        print(c.fetchone()[1][0])
+# try:
+    c=db_connect()
+    # print("profile table before adding user")
+    # rows = c.execute("select * from profile")
+    # for row in rows:
+    #     print(row)
+    # print("\nmatches table before adding user")
+    # rows = c.execute("select * from matches")
+    # for row in rows:
+    #     print(row)
 
-        c.execute("Insert into profile values(?,?,?,?,?,?,?,?)", (user, pw, full_name, dob, contact, college, major, bio))
-        # print("\nprofile table after adding user")
-        # rows = c.execute("select * from profile")
-        # for row in rows:
-        #     print(row)
-        # print("\nmatches table before adding user")
-        # rows = c.execute("select * from matches")
-        # for row in rows:
-        #     print(row)
+    # add user as p0, and create a row with p0 as everyone else in table
+    # c.execute("select p0 from matches")
+    # print(c.fetchall())
 
-        c.close()
-        db.commit()
-        db.close()
-        print('User has been successfully created')
-    except:
-        print('User has not been created successfully')
+    # get list of all unique users in p0 in matches
+    c.execute("select p0 from matches")
+    existing_users = c.fetchall() # array of tuples, each tuple = (p0,)
+    print("existing_users:")
+    print(existing_users)
+    unique_users = []
+    print("starting to go through all the users")
+    for i in range(len(existing_users)):
+        person = existing_users[i][0]
+        print(person)
+        if person != None and person not in unique_users:
+            unique_users.append(person)
+            print(person + " added to unique_users")
+    print("unique users:")
+    print(unique_users)
+
+    # print(c.fetchall())
+
+    c.execute("Insert into profile values(?,?,?,?,?,?,?,?)", (user, pw, full_name, dob, contact, college, major, bio))
+    # print("\nprofile table after adding user")
+    # rows = c.execute("select * from profile")
+    # for row in rows:
+    #     print(row)
+    # print("\nmatches table before adding user")
+    # rows = c.execute("select * from matches")
+    # for row in rows:
+    #     print(row)
+
+    c.close()
+    db.commit()
+    db.close()
+    print('User has been successfully created')
+# except:
+    print('User has not been created successfully')
 
 # Checks if a username exists in the profile table
 # Parameters: text user
