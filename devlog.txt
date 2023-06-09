@@ -21,4 +21,11 @@ yuki -- 2023-06-06 22:11
 
 ==========================
 
- -- 2023-06-07
+emilyO -- 2023-06-07 14:00
+- worked on db_handle.py
+
+==========================
+
+emilyO -- 2023-06-09 18:15
+- create_user() fixed
+- swipe_right() and swipe_left() done

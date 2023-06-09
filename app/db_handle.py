@@ -7,8 +7,8 @@ db = sqlite3.connect(DB_FILE, check_same_thread = False)
 c = db.cursor()
 
 db.executescript("""
-CREATE TABLE if not exists profile(user text, pw text, full_name text, dob text, contact text, college text, major text, bio text);
-Insert into profile values(?,?,?,?,?,?,?,?), ('admin', 'password', 'Frist Lsat', '1/2/2005', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
+CREATE TABLE if not exists profile(pfp text, user text, pw text, full_name text, dob text, contact text, college text, major text, bio text);
+Insert into profile values(?,?,?,?,?,?,?,?,?), ('temp pfp text', 'admin', 'password', 'Frist Lsat', '1/2/2005', 'stuycs.org', 'Stuyvesant HS', 'SoftDev', "Hello World!");
 CREATE TABLE if not exists matches(p0 text, p1 text, status text);
 Insert into matches values(?,?,?), ('admin', '', '');
 """)
@@ -18,61 +18,64 @@ def db_connect():
     db = sqlite3.connect(DB_FILE)
     return db.cursor()
 
+# HELPER METHODS ---------------------------------------------------------------------------
+def print_profile():
+    print("\nprofile table")
+    rows = c.execute("select * from profile")
+    for row in rows:
+        print(row)
+
+def print_matches():
+    print("\nmatches table")
+    rows = c.execute("select * from matches")
+    for row in rows:
+        print(row)
+
 # LOGIN METHODS ---------------------------------------------------------------------------
 
 # Creates a new user
-# Parameters: text user, pw, full_name, contact, college, major, bio
+# Parameters: text pfp, user, pw, full_name, dob, contact, college, major, bio
 # Returns nothing
-def create_user(user, pw, full_name, dob, contact, college, major, bio):
-# try:
-    c=db_connect()
-    # print("profile table before adding user")
-    # rows = c.execute("select * from profile")
-    # for row in rows:
-    #     print(row)
-    # print("\nmatches table before adding user")
-    # rows = c.execute("select * from matches")
-    # for row in rows:
-    #     print(row)
+def create_user(pfp, user, pw, full_name, dob, contact, college, major, bio):
+    try:
+        c=db_connect()
+        
+        # print("\ntables before creating user")
+        # print_profile()
+        # print_matches()
 
-    # add user as p0, and create a row with p0 as everyone else in table
-    # c.execute("select p0 from matches")
-    # print(c.fetchall())
+        # get list of all unique users in p0 in profile
+        c.execute("select user from profile")
+        existing_users = c.fetchall() # array of tuples, each tuple = (p0,)
+        # print("\nexisting_users:")
+        # print(existing_users)
+        unique_users = []
+        # print("starting to go through all the users")
+        for i in range(len(existing_users)): # going through array
+            person = existing_users[i][0] # gets string from tuple
+            # print(person)
+            if person != None and person not in unique_users:
+                unique_users.append(person)
+        #         print(person + " added to unique_users")
+        # print("\nunique users:")
+        # print(unique_users)
+        
+        # updating matches table
+        for existing_user in unique_users:
+            # create a row in matches where p0 = user inputted to create_user() and p1 = an existing user
+            c.execute("Insert into matches values(?,?,?)", (user, existing_user, 'unswiped'))
+            # create a row in matches where p0 = an existing user and and p1 = user inputted to create_user()
+            c.execute("Insert into matches values(?,?,?)", (existing_user, user, 'unswiped'))
 
-    # get list of all unique users in p0 in matches
-    c.execute("select p0 from matches")
-    existing_users = c.fetchall() # array of tuples, each tuple = (p0,)
-    print("existing_users:")
-    print(existing_users)
-    unique_users = []
-    print("starting to go through all the users")
-    for i in range(len(existing_users)):
-        person = existing_users[i][0]
-        print(person)
-        if person != None and person not in unique_users:
-            unique_users.append(person)
-            print(person + " added to unique_users")
-    print("unique users:")
-    print(unique_users)
+        # add inputted user to profile table
+        c.execute("Insert into profile values(?,?,?,?,?,?,?,?,?)", (pfp, user, pw, full_name, dob, contact, college, major, bio))
 
-    # print(c.fetchall())
-
-    c.execute("Insert into profile values(?,?,?,?,?,?,?,?)", (user, pw, full_name, dob, contact, college, major, bio))
-    # print("\nprofile table after adding user")
-    # rows = c.execute("select * from profile")
-    # for row in rows:
-    #     print(row)
-    # print("\nmatches table before adding user")
-    # rows = c.execute("select * from matches")
-    # for row in rows:
-    #     print(row)
-
-    c.close()
-    db.commit()
-    db.close()
-    print('User has been successfully created')
-# except:
-    print('User has not been created successfully')
+        c.close()
+        db.commit()
+        db.close()
+        print('\nUser ' + user + ' has been successfully created')
+    except:
+        print('\nUser ' + user + ' has not been created successfully')
 
 # Checks if a username exists in the profile table
 # Parameters: text user
@@ -106,8 +109,10 @@ def check_pass(user, pw):
         db.close()
         return False
 
+# TESTING LOGIN METHODS ---------------------------------------------------------------------------
+
 # print("create_user test")
-create_user('rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+# create_user('rory pfp', 'rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
 # print("check_user test - should be True")
 # print(check_user('admin'))
 # print(check_user('rory'))
@@ -120,30 +125,109 @@ create_user('rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', '
 # print(check_pass('admin','psword'))
 # print(check_pass('u','p')) # false b/c not an account
 
+# SWIPE HELPER METHODS ---------------------------------------------------------------------------
+
+# takes (logged in) user, another user, and a status
+# returns true if status is p0's relationship with p1
+# returns false otherwise (not the right status, not right users, etc.)
+def check_relationship(p0, p1, status):
+    c=db_connect()
+    c.execute('select * from matches where (p0 = ? AND p1 = ? AND status = ?)', (p0, p1, status))
+    try:
+        c.fetchone()[0]
+        c.close()
+        db.close()
+        return True
+    except:
+        c.close()
+        db.close()
+        return False
+
+# print_profile()
+# print_matches()
+# print("")
+# print(check_relationship('admin', 'rory', 'unswiped'))
+# print(check_relationship('admin', 'rory', 'match'))
+# print(check_relationship('not', 'existing', 'user'))
+
+def update_relationship(p0, p1, status):
+    c=db_connect()
+    c.execute ('delete from matches where (p0 = ? AND p1 = ?)', (p0, p1))
+    c.execute("Insert into matches values(?,?,?)", (p0, p1, status))
+    c.close()
+    db.commit()
+    db.close()
+    print("\n" + p0 + " relationship towards " + p1 + " updated to " + status)
+
 # SWIPE METHODS ---------------------------------------------------------------------------
-'''
-swipe_right(a, b)
-a = user that is logged in
-b = who they are swiping yes on
-Remove b from a’s unswiped
-If a is in b’s matches: (shouldn’t happen b/c you can’t swipe on someone you alr matched with but I’ll code it anyway)
-Add b to a’s matches
-If a is in b’s not_matches: (shouldn’t happen b/c you can’t swipe on someone who said no to you but I’ll code it anyway)
-Add b to a’s not matches
-If a is in b’s potentials:
-Add b to a’s matches
-Remove a from b’s potentials
-Add a to b’s matches
-If a is in b’s unswiped:
-Add b to a’s potentials
-Add some error handling for a not being in any of b’s lists
-Add error handling for any other potential issues
-'''
-# updates matches table
-# a is the person logged in, and they are swiping on b
+
+# p0 = user of person logged in 
+# p1 = user of person p0 is swiping on
 # returns nothing
-def swipe_right(a, b):
-    return null
+def swipe_right(p0, p1):
+
+    # if p1 has already matched with p0
+    # shldn't happen b/c can't swipe on someone you already matched with
+    if check_relationship(p1, p0, 'match'):
+        update_relationship(p0, p1, 'match')
+
+    # if p1 has already not matched with p0
+    # shldn't happen b/c can't swipe on someone who said no to you
+    elif check_relationship(p1, p0, 'not match'):
+        update_relationship(p0, p1, 'not match')
+
+    # if p1 has already said yes to p0
+    elif check_relationship(p1, p0, 'potential'):
+        update_relationship(p0, p1, 'match')
+        update_relationship(p1, p0, 'match')
+
+    # if p1 hasn't swiped on p0
+    elif check_relationship(p1, p0, 'unswiped'):
+        update_relationship(p0, p1, 'potential')
+
+    print("\n" + p0 + " swipe right on " + p1 + " complete")
+
+# create_user('rory pfp', 'rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+# print_matches()
+# swipe_right('rory', 'admin')
+# print_matches()
+
+# p0 = user of person logged in 
+# p1 = user of person p0 is swiping on
+# returns nothing
+def swipe_left(p0, p1):
+
+    # if p1 has already matched with p0
+    # shldn't happen b/c can't swipe on someone you already matched with
+    if check_relationship(p1, p0, 'match'):
+        update_relationship(p0, p1, 'not match')
+        update_relationship(p1, p0, 'not match')
+
+    # if p1 has already not matched with p0
+    # shldn't happen b/c can't swipe on someone who said no to you
+    elif check_relationship(p1, p0, 'not match'):
+        update_relationship(p0, p1, 'not match')
+
+    # if p1 has already said yes to p0
+    elif check_relationship(p1, p0, 'potential'):
+        update_relationship(p0, p1, 'not match')
+        update_relationship(p1, p0, 'not match')
+
+    # if p1 hasn't swiped on p0
+    elif check_relationship(p1, p0, 'unswiped'):
+        update_relationship(p0, p1, 'not match')
+        update_relationship(p1, p0, 'not match')
+
+    print("\n" + p0 + " swipe left on " + p1 + " complete")
+
+# create_user('rory pfp', 'rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+print_matches()
+swipe_left('rory', 'admin')
+print_matches()
+
+
+# CREATING EXTRA USERS ---------------------------------------------------------------------------
+
 # Copy and paste format (and uncomment) to create users for db
 # These commands are executed when db_handle is imported to __init__.py ??
 # user = ""
