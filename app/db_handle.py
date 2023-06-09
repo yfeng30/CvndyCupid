@@ -221,9 +221,9 @@ def swipe_left(p0, p1):
     print("\n" + p0 + " swipe left on " + p1 + " complete")
 
 # create_user('rory pfp', 'rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
-print_matches()
-swipe_left('rory', 'admin')
-print_matches()
+# print_matches()
+# swipe_left('rory', 'admin')
+# print_matches()
 
 
 # CREATING EXTRA USERS ---------------------------------------------------------------------------
