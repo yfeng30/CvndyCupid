@@ -226,6 +226,92 @@ def swipe_left(p0, p1):
 # print_matches()
 
 
+# GET INFO METHOD ---------------------------------------------------------------------------
+
+# takes in username
+# returns dictionary with key/value pairs for all that user's info except pw
+def get_profile(user):
+    c = db_connect()
+    c.execute("Select * from profile where user = ?", (user,))
+    row = c.fetchone() # there should only be one row per user anyway
+    c.close()
+    db.close()
+
+    # print(row)
+    
+    output = {}
+    for i in range(len(row)):
+        output["pfp"] = row[0]
+        output["user"] = row[1]
+        # skip pw
+        output["full_name"] = row[3]
+        output["dob"] = row[4]
+        output["contact"] = row[5]
+        output["college"] = row[6]
+        output["major"] = row[7]
+        output["bio"] = row[8]
+
+    return output
+
+# print(get_profile('admin'))
+# create_user('rory pfp', 'rory','gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+# print(get_profile('rory'))
+
+# takes in username
+# returns array of dictionaries of all unswiped profiles for the user
+# each dictionary has key/value pairs for info of a person the user hasn't swiped on
+def get_unswiped(user):
+    c = db_connect()
+    c.execute("Select * from matches where p0 = ? AND status = ?", (user, 'unswiped'))
+    rows = c.fetchall() # array of tuples, each tuple represents a person
+    c.close()
+    db.close()
+
+    output = []
+    for row in rows:
+        # print(row)
+        unswiped_user = row[1]
+        temp_dict = get_profile(unswiped_user)
+        # temp_dict.pop("dob")
+        temp_dict.pop("contact")
+        output.append(temp_dict)
+    return output
+    
+# create_user('rory pfp', 'rory', 'gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+# create_user('dory pfp', 'dory', 'blub', 'Dory (The Fish)', '06/17/2016', 'the ocean', 'Pacific Uni', 'swim', 'just keep swimming')
+# print_matches()
+# print("")
+# swipe_left("rory", "admin")
+# print(get_unswiped('admin'))
+# print_matches()
+
+# takes in username
+# returns array of dictionaries of all profiles the user matched with
+# each dictionary has key/value pairs for info of a person the user matched with
+def get_matches(user):
+    c = db_connect()
+    c.execute("Select * from matches where p0 = ? AND status = ?", (user, 'match'))
+    rows = c.fetchall() # array of tuples, each tuple represents a person
+    c.close()
+    db.close()
+
+    output = []
+    for row in rows:
+        # print(row)
+        matched_user = row[1]
+        temp_dict = get_profile(matched_user)
+        output.append(temp_dict)
+    return output
+
+# create_user('rory pfp', 'rory', 'gilmore', 'Rory Gilmore', '02/02/2002', '8675309', 'Yale', 'English', 'insert bio here')
+# create_user('dory pfp', 'dory', 'blub', 'Dory (The Fish)', '06/17/2016', 'the ocean', 'Pacific Uni', 'swim', 'just keep swimming')
+# print_matches()
+# swipe_right("rory", "dory")
+# print_matches()
+# swipe_right("dory","rory")
+# print_matches()
+# print(get_matches('rory'))
+
 # CREATING EXTRA USERS ---------------------------------------------------------------------------
 
 # Copy and paste format (and uncomment) to create users for db

@@ -29,3 +29,6 @@ emilyO -- 2023-06-07 14:00
 emilyO -- 2023-06-09 18:15
 - create_user() fixed
 - swipe_right() and swipe_left() done
+
+emilyO -- 2023-06-09 19:30
+- get_profile(), get_unswiped(), get_matches() done
