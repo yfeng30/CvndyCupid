@@ -54,7 +54,7 @@ def authenticate():
   if not (check_pass(request.form.get('username'), request.form.get('password'))): #NEED method to take in a username and password and return if that entry exists
     return render_template('login.html', status='Incorrect password!')
   session['username'] = request.form['username']
-  return redirect('/home/pl')
+  return redirect('/swipe')
 
 #forgot to actually allow a logout (I think it was in the site map)
 @app.route('/logout')
@@ -69,7 +69,17 @@ def swipe():
 
 @app.route('/profile', methods = ['GET', 'POST'])
 def profile():
-  return render_template("profile.html")
+  return render_template(
+    "profile.html",
+    username = session['username'],
+    password = request.form.get('password'), 
+    full_name = request.form.get('full_name'), 
+    dob = request.form.get('dob'), 
+    contact = request.form.get('contact'), 
+    college = request.form.get('college'), 
+    major = request.form.get('major'), 
+    bio = request.form.get('bio')
+  )
 
 @app.route('/matches', methods = ['GET', 'POST'])
 def matches():

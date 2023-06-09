@@ -13,63 +13,63 @@
 
 body {
     background: linear-gradient(0deg, #ffbfff, #ff80e1) no-repeat center center fixed;
-  }
+}
 
-/* .card-img-top {
-    width: 50%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-  .btn {
-    font-size: 3.5rem;
-    border-radius: 20px;
-    width: auto;
-  }
-  
-.swipe-card {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .swipe-card .card-img-top {
-    width: 100%;
-    height: 50%;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
-  
-  .swipe-card .card-body {
-    width: 100%;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .swipe-card .card-title {
-    font-size: 5.0rem;
-  }
-  
-  .swipe-card .card-text {
-    font-size: 3.5rem;
-  }
-  
-  .swipe-card .swipe-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .swipe-card .swipe-buttons .btn {
-    flex-grow: 1;
-    margin: 0 10px;
-  } */
+.swipe {
+    transition: opacity 0.1s ease-in-out;
+}
+
+.loaded.swipe {
+    opacity: 1;
+}
+
+#swipe-status i {
+    opacity: 0;
+    transform: scale(0.3);
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+    width: 100px;
+}
+
+.cupid_hit .fa-heart{
+    opacity: 0.7;
+    transform: scale(1);
+}
+
+.cupid_missed .fa-remove {
+    opacity: 0.7;
+    transform: scale(1);
+}
+
+.card {
+    min-width: 375px;
+    max-width: 30vw;
+    will-change: transform;
+    transition: all 0.3s ease-in-out;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+
+.card-img-top {
+    height: 350px;
+}
+
+.moving.card {
+    transition: none;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+
+#swipeBtns button:focus {
+  outline: 0;
+}
+
+.fa-heart {
+  color: #FFACE4;
+}
+
+.fa-remove {
+  color: #CDD6DD;
+}
