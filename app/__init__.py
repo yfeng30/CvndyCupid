@@ -65,8 +65,9 @@ def logout():
 
 @app.route('/swipe', methods = ['GET', 'POST'])
 def swipe():
-  return render_template("swipe.html")
-
+  return render_template(
+    "swipe.html",
+    )
 @app.route('/profile', methods = ['GET', 'POST'])
 def profile():
   person = session['username']

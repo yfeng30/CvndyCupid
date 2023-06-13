@@ -11,65 +11,38 @@
     color: #FF1D8E;
 }
 
+html,
 body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background: linear-gradient(0deg, #ffbfff, #ff80e1) no-repeat center center fixed;
 }
 
-.swipe {
-    transition: opacity 0.1s ease-in-out;
-}
-
-.loaded.swipe {
-    opacity: 1;
-}
-
-#swipe-status i {
-    opacity: 0;
-    transform: scale(0.3);
-    transition: all 0.2s ease-in-out;
-    position: absolute;
-    width: 100px;
-}
-
-.cupid_hit .fa-heart{
-    opacity: 0.7;
-    transform: scale(1);
-}
-
-.cupid_missed .fa-remove {
-    opacity: 0.7;
-    transform: scale(1);
+#board {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .card {
-    min-width: 375px;
-    max-width: 30vw;
-    will-change: transform;
-    transition: all 0.3s ease-in-out;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
-    cursor: grab;
+    width: 385px;
+    height: 500px;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) scale(0.95);
 }
 
 .card-img-top {
     height: 350px;
 }
 
-.moving.card {
-    transition: none;
-    cursor: -webkit-grabbing;
-    cursor: -moz-grabbing;
-    cursor: grabbing;
-}
-
-#swipeBtns button:focus {
-  outline: 0;
-}
-
-.fa-heart {
-  color: #FFACE4;
-}
-
-.fa-remove {
-  color: #CDD6DD;
+#swipeBtns {
+    width: 385px;
+    position: absolute;
+    bottom: 20%;
+    left: 38%;
 }

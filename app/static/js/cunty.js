@@ -1,97 +1,211 @@
-'use strict';
+/* LikeCarousel (c) 2019 Simone P.M. github.com/simonepm - Licensed MIT */
 
-var swipe = document.querySelector('.swipe');
-var allCards = document.querySelectorAll('div.card');
-var left = document.getElementById('left');
-var right = document.getElementById('right');
+class Carousel {
 
-function initCards(card, index) {
-  var newCards = document.querySelectorAll('.card:not(.removed)');
+    constructor(element) {
 
-  newCards.forEach(function (card, index) {
-    card.style.zIndex = allCards.length - index;
-    card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + 30 * index + 'px)';
-    card.style.opacity = (10 - index) / 10;
-  });
-  
-  swipe.classList.add('loaded');
-}
+        this.board = element
 
-initCards();
+        // add first two cards programmatically
+        this.push()
+        this.push()
 
-allCards.forEach(function (el) {
-  var hammertime = new Hammer(el);
+        // handle gestures
+        this.handle()
 
-  hammertime.on('pan', function (event) {
-    el.classList.add('moving');
-  });
-
-  hammertime.on('pan', function (event) {
-    if (event.deltaX === 0) return;
-    if (event.center.x === 0 && event.center.y === 0) return;
-
-    swipe.classList.toggle('cupid_hit', event.deltaX > 0);
-    swipe.classList.toggle('cupid_missed', event.deltaX < 0);
-
-    var xMulti = event.deltaX * 0.03;
-    var yMulti = event.deltaY / 80;
-    var rotate = xMulti * yMulti;
-
-    event.target.style.transform = 'translate(' + event.deltaX + 'px, ' + event.deltaY + 'px) rotate(' + rotate + 'deg)';
-  });
-
-  hammertime.on('panend', function (event) {
-    el.classList.remove('moving');
-    swipe.classList.remove('cupid_hit');
-    swipe.classList.remove('cupid_missed');
-
-    var moveOutWidth = document.body.clientWidth;
-    var keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
-
-    event.target.classList.toggle('removed', !keep);
-
-    if (keep) {
-      event.target.style.transform = '';
-    } else {
-      var endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
-      var toX = event.deltaX > 0 ? endX : -endX;
-      var endY = Math.abs(event.velocityY) * moveOutWidth;
-      var toY = event.deltaY > 0 ? endY : -endY;
-      var xMulti = event.deltaX * 0.03;
-      var yMulti = event.deltaY / 80;
-      var rotate = xMulti * yMulti;
-
-      event.target.style.transform = 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)';
-      initCards();
-    }
-  });
-});
-
-function createButtonListener(right) {
-  return function (event) {
-    var cards = document.querySelectorAll('.card:not(.removed)');
-    var moveOutWidth = document.body.clientWidth * 1.5;
-
-    if (!cards.length) return false;
-
-    var card = cards[0];
-
-    card.classList.add('removed');
-
-    if (right) {
-      card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-    } else {
-      card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
     }
 
-    initCards();
+    handle() {
 
-    event.preventDefault();
-  };
+        // list all cards
+        this.cards = this.board.querySelectorAll('.card')
+
+        // get top card
+        this.topCard = this.cards[this.cards.length - 1]
+
+        // get next card
+        this.nextCard = this.cards[this.cards.length - 2]
+
+        // if at least one card is present
+        if (this.cards.length > 0) {
+
+            // set default top card position and scale
+            this.topCard.style.transform =
+                'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+
+            // destroy previous Hammer instance, if present
+            if (this.hammer) this.hammer.destroy()
+
+            // listen for tap and pan gestures on top card
+            this.hammer = new Hammer(this.topCard)
+            this.hammer.add(new Hammer.Tap())
+            this.hammer.add(new Hammer.Pan({
+                position: Hammer.position_ALL,
+                threshold: 0
+            }))
+
+            // pass events data to custom callbacks
+            this.hammer.on('tap', (e) => {
+                this.onTap(e)
+            })
+            this.hammer.on('pan', (e) => {
+                this.onPan(e)
+            })
+
+        }
+
+    }
+
+    onTap(e) {
+
+        // get finger position on top card
+        let propX = (e.center.x - e.target.getBoundingClientRect().left) / e.target.clientWidth
+
+        // get rotation degrees around Y axis (+/- 15) based on finger position
+        let rotateY = 15 * (propX < 0.05 ? -1 : 1)
+
+        // enable transform transition
+        this.topCard.style.transition = 'transform 100ms ease-out'
+
+        // apply rotation around Y axis
+        this.topCard.style.transform =
+            'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(' + rotateY + 'deg) scale(1)'
+
+        // wait for transition end
+        setTimeout(() => {
+            // reset transform properties
+            this.topCard.style.transform =
+                'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+        }, 100)
+
+    }
+
+    onPan(e) {
+
+        if (!this.isPanning) {
+
+            this.isPanning = true
+
+            // remove transition properties
+            this.topCard.style.transition = null
+            if (this.nextCard) this.nextCard.style.transition = null
+
+            // get top card coordinates in pixels
+            let style = window.getComputedStyle(this.topCard)
+            let mx = style.transform.match(/^matrix\((.+)\)$/)
+            this.startPosX = mx ? parseFloat(mx[1].split(', ')[4]) : 0
+            this.startPosY = mx ? parseFloat(mx[1].split(', ')[5]) : 0
+
+            // get top card bounds
+            let bounds = this.topCard.getBoundingClientRect()
+
+            // get finger position on top card, top (1) or bottom (-1)
+            this.isDraggingFrom =
+                (e.center.y - bounds.top) > this.topCard.clientHeight / 2 ? -1 : 1
+
+        }
+
+        // get new coordinates
+        let posX = e.deltaX + this.startPosX
+        let posY = e.deltaY + this.startPosY
+
+        // get ratio between swiped pixels and the axes
+        let propX = e.deltaX / this.board.clientWidth
+        let propY = e.deltaY / this.board.clientHeight
+
+        // get swipe direction, left (-1) or right (1)
+        let dirX = e.deltaX < 0 ? -1 : 1
+
+        // get degrees of rotation, between 0 and +/- 45
+        let deg = this.isDraggingFrom * dirX * Math.abs(propX) * 45
+
+        // get scale ratio, between .95 and 1
+        let scale = (95 + (5 * Math.abs(propX))) / 100
+
+        // move and rotate top card
+        this.topCard.style.transform =
+            'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg) rotateY(0deg) scale(1)'
+
+        // scale up next card
+        if (this.nextCard) this.nextCard.style.transform =
+            'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(' + scale + ')'
+
+        if (e.isFinal) {
+
+            this.isPanning = false
+
+            let successful = false
+
+            // set back transition properties
+            this.topCard.style.transition = 'transform 200ms ease-out'
+            if (this.nextCard) this.nextCard.style.transition = 'transform 100ms linear'
+
+            // check threshold and movement direction
+            if (propX > 0.25 && e.direction == Hammer.DIRECTION_RIGHT) {
+
+                successful = true
+                // get right border position
+                posX = this.board.clientWidth
+
+            } else if (propX < -0.25 && e.direction == Hammer.DIRECTION_LEFT) {
+
+                successful = true
+                // get left border position
+                posX = -(this.board.clientWidth + this.topCard.clientWidth)
+
+            } else if (propY < -0.25 && e.direction == Hammer.DIRECTION_UP) {
+
+                successful = true
+                // get top border position
+                posY = -(this.board.clientHeight + this.topCard.clientHeight)
+
+            }
+
+            if (successful) {
+
+                // throw card in the chosen direction
+                this.topCard.style.transform =
+                    'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg)'
+
+                // wait transition end
+                setTimeout(() => {
+                    // remove swiped card
+                    this.board.removeChild(this.topCard)
+                    // add new card
+                    this.push()
+                    // handle gestures on new top card
+                    this.handle()
+                }, 200)
+
+            } else {
+
+                // reset cards position and size
+                this.topCard.style.transform =
+                    'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+                if (this.nextCard) this.nextCard.style.transform =
+                    'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(0.95)'
+
+            }
+
+        }
+
+    }
+
+    push() {
+
+        let card = document.createElement('div')
+
+        card.classList.add('card')
+
+        card.style.backgroundImage =
+            "url('https://picsum.photos/320/320/?random=" + Math.round(Math.random() * 1000000) + "')"
+
+        this.board.insertBefore(card, this.board.firstChild)
+
+    }
+
 }
 
-var leftListener = createButtonListener(false);
-var rightListener = createButtonListener(true);
+let board = document.querySelector('#board')
 
-left.addEventListener('click', leftListener);
-right.addEventListener('click', rightListener);
+let carousel = new Carousel(board)
