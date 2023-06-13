@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_FILE = "data.db"
+DB_FILE = "database.db"
 
 db = None
 db = sqlite3.connect(DB_FILE, check_same_thread = False)

@@ -69,16 +69,18 @@ def swipe():
 
 @app.route('/profile', methods = ['GET', 'POST'])
 def profile():
+  person = session['username']
+  info = get_profile(person)
   return render_template(
     "profile.html",
-    username = session['username'],
-    password = request.form.get('password'), 
-    full_name = request.form.get('full_name'), 
-    dob = request.form.get('dob'), 
-    contact = request.form.get('contact'), 
-    college = request.form.get('college'), 
-    major = request.form.get('major'), 
-    bio = request.form.get('bio')
+    username = person,
+    pfp = info['pfp'],
+    full_name = info['full_name'], 
+    dob = info['dob'], 
+    contact = info['contact'], 
+    college = info['college'], 
+    major = info['major'], 
+    bio = info['bio']
   )
 
 @app.route('/matches', methods = ['GET', 'POST'])
