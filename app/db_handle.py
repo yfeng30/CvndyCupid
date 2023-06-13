@@ -282,7 +282,7 @@ def get_unswiped(user):
 # print_matches()
 # print("")
 # swipe_left("rory", "admin")
-# print(get_unswiped('admin'))
+print(get_unswiped('admin'))
 # print_matches()
 
 # takes in username

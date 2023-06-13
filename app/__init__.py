@@ -65,8 +65,19 @@ def logout():
 
 @app.route('/swipe', methods = ['GET', 'POST'])
 def swipe():
+  # person = session['username']
+  # info = get_unswiped(person)
+  # firstUnswiped = info[0]
   return render_template(
     "swipe.html",
+    # username = person,
+    # pfp = firstUnswiped['pfp'],
+    # full_name = firstUnswiped['full_name'], 
+    # dob = firstUnswiped['dob'], 
+    # contact = firstUnswiped['contact'], 
+    # college = firstUnswiped['college'], 
+    # major = firstUnswiped['major'], 
+    # bio = firstUnswiped['bio']
     )
 @app.route('/profile', methods = ['GET', 'POST'])
 def profile():
